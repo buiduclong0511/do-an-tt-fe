@@ -1,13 +1,12 @@
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { Header } from 'src/components';
-import styles from './Layout.module.scss';
 
 function ClientLayout({ children }) {
     return (
-        <div className={styles.clientLayout}>
+        <Box sx={{ minHeight: '100vh', background: '#cd1818', display: 'flex', flexDirection: 'column' }}>
             <Header />
-            <Container maxWidth="lg">{children}</Container>
-        </div>
+            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</Box>
+        </Box>
     );
 }
 
