@@ -44,7 +44,7 @@ function Home() {
                                 <Box sx={{ cursor: 'pointer' }}>
                                     <Box
                                         component="img"
-                                        sx={{ width: '100%' }}
+                                        sx={{ width: '100%', height: '150px' }}
                                         src={`${process.env.REACT_APP_BASE_URL}/${product.image}`}
                                     />
                                     <Typography>{product.name}</Typography>
@@ -60,19 +60,22 @@ function Home() {
                                     >
                                         {Number(product.price).toLocaleString()} VND
                                     </Typography>
-                                    <Typography
-                                        fontSize="13px"
-                                        fontWeight={400}
-                                        mt={1}
-                                        component="p"
-                                        color={colors.grey[700]}
-                                    >
-                                        {product.description
-                                            .split('\n')
-                                            .map((item) => `- ${item}`)
-                                            .slice(0, 3)
-                                            .join('\n')}
-                                    </Typography>
+                                    {product.description
+                                        .split('\n')
+                                        .map((item) => `- ${item}`)
+                                        .slice(0, 3)
+                                        .map((description, index) => (
+                                            <Typography
+                                                fontSize="13px"
+                                                fontWeight={400}
+                                                mt={1}
+                                                component="p"
+                                                color={colors.grey[700]}
+                                                key={`description-${index}-${product.id}`}
+                                            >
+                                                {description}
+                                            </Typography>
+                                        ))}
                                 </Box>
                             </Grid>
                         ))}
@@ -88,7 +91,7 @@ function Home() {
                                 <Box sx={{ cursor: 'pointer' }}>
                                     <Box
                                         component="img"
-                                        sx={{ width: '100%' }}
+                                        sx={{ width: '100%', height: '150px' }}
                                         src={`${process.env.REACT_APP_BASE_URL}/${product.image}`}
                                     />
                                     <Typography>{product.name}</Typography>
@@ -104,19 +107,22 @@ function Home() {
                                     >
                                         {Number(product.price).toLocaleString()} VND
                                     </Typography>
-                                    <Typography
-                                        fontSize="13px"
-                                        fontWeight={400}
-                                        mt={1}
-                                        component="p"
-                                        color={colors.grey[700]}
-                                    >
-                                        {product.description
-                                            .split('\n')
-                                            .map((item) => `- ${item}`)
-                                            .slice(0, 3)
-                                            .join('\n')}
-                                    </Typography>
+                                    {product.description
+                                        .split('\n')
+                                        .map((item) => `- ${item}`)
+                                        .slice(0, 3)
+                                        .map((description, index) => (
+                                            <Typography
+                                                fontSize="13px"
+                                                fontWeight={400}
+                                                mt={1}
+                                                component="p"
+                                                color={colors.grey[700]}
+                                                key={`description-${index}-${product.id}`}
+                                            >
+                                                {description}
+                                            </Typography>
+                                        ))}
                                 </Box>
                             </Grid>
                         ))}

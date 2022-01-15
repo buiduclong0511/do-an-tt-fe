@@ -1,5 +1,8 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
     Button,
+    colors,
+    IconButton,
     Stack,
     Table,
     TableBody,
@@ -10,19 +13,55 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { productApi } from 'src/api';
 
 function ListProduct() {
     const [products, setProducts] = useState([]);
-    console.log('~ products', products);
+    const navigate = useNavigate();
+
+    const getProducts = useCallback(() => productApi.getProducts().then((res) => setProducts(res.data)), []);
 
     useEffect(() => {
-        productApi.getProducts().then((res) => setProducts(res.data));
-    }, []);
+        getProducts();
+    }, [getProducts]);
+
+    const handleClickDeleteButton = useCallback(
+        (id) =>
+            confirmAlert({
+                title: 'Xác nhận xóa',
+                message: 'Bạn có muốn xóa sản phẩm này ?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () =>
+                            productApi.deleteProduct(id).then(() => {
+                                getProducts();
+                                toast.success('Xóa thành công!');
+                            }),
+                    },
+                    {
+                        label: 'No',
+                    },
+                ],
+            }),
+        [getProducts],
+    );
+
+    const handleClickEditButton = useCallback((id) => navigate(`/admin/edit-product/${id}`), [navigate]);
 
     return (
         <Box px={2}>
+            <IconButton
+                component={Link}
+                to="/admin/new-product"
+                sx={{ color: colors.blue[500], position: 'fixed', bottom: '30px', right: '30px' }}
+            >
+                <AddCircleIcon fontSize="large" />
+            </IconButton>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography my={2} variant="h5">
                     Danh sách sản phẩm
@@ -61,8 +100,12 @@ function ListProduct() {
                                 <TableCell>{product.name}</TableCell>
                                 <TableCell align="center">
                                     <Stack spacing={1} direction="row" justifyContent="center">
-                                        <Button variant="contained">Sửa</Button>
-                                        <Button variant="contained">Xóa</Button>
+                                        <Button variant="contained" onClick={() => handleClickEditButton(product.id)}>
+                                            Sửa
+                                        </Button>
+                                        <Button variant="contained" onClick={() => handleClickDeleteButton(product.id)}>
+                                            Xóa
+                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>
