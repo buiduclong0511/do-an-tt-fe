@@ -1,5 +1,5 @@
 import { Badge, Box, Button, colors, Container, IconButton, Stack, Typography } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import authApi from 'src/api/auth';
@@ -7,20 +7,16 @@ import { clearUserInfo, setCart } from 'src/redux/slices';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { cartApi, categoryApi } from 'src/api';
+import { cartApi, categoryApi, productApi } from 'src/api';
 
 function Header() {
     const userInfo = useSelector((state) => state.auth).userInfo;
     const cart = useSelector((state) => state.cart).cart;
     const dispatch = useDispatch();
 
-    const [categories, setCategories] = React.useState([]);
-
-    const handleLogout = useCallback(() => {
-        authApi.logout().then(() => {
-            dispatch(clearUserInfo());
-        });
-    }, [dispatch]);
+    const [categories, setCategories] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         if (userInfo) {
@@ -31,6 +27,18 @@ function Header() {
     useEffect(() => {
         categoryApi.getCategories().then((res) => setCategories(res.data));
     }, []);
+
+    const handleLogout = useCallback(() => {
+        authApi.logout().then(() => {
+            dispatch(clearUserInfo());
+        });
+    }, [dispatch]);
+
+    const handleSearch = useCallback((q) => productApi.getProducts(q).then((res) => setProducts(res.data)), []);
+
+    useEffect(() => {
+        handleSearch(inputValue.trim());
+    }, [handleSearch, inputValue]);
 
     return (
         <Box>
@@ -45,19 +53,54 @@ function Header() {
                         <Typography component={Link} to="/" sx={{ color: colors.common.white, textDecoration: 'none' }}>
                             Minh Anh Shop
                         </Typography>
-                        <Stack
-                            direction="row"
-                            ml={4}
-                            sx={{
-                                input: {
-                                    outline: 'none',
-                                    border: 'none',
-                                    p: 1,
-                                    width: '300px',
-                                },
-                            }}
-                        >
-                            <input placeholder="Nhập tên laptop cần tìm kiếm..." />
+                        <Stack direction="row" ml={4}>
+                            <Box sx={{ position: 'relative' }}>
+                                <Box
+                                    component="input"
+                                    sx={{
+                                        outline: 'none',
+                                        border: 'none',
+                                        p: 1,
+                                        width: '300px',
+                                    }}
+                                    placeholder="Nhập tên laptop cần tìm kiếm..."
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value.trim())}
+                                />
+                                {!!inputValue.trim() && (
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: 0,
+                                            width: '100%',
+                                            backgroundColor: '#fff',
+                                            color: '#000',
+                                            boxShadow: (theme) => theme.shadows[4],
+                                        }}
+                                    >
+                                        {products.map((product) => (
+                                            <Box
+                                                key={product.id}
+                                                sx={{
+                                                    p: 1,
+                                                    borderTop: '1px solid #ccc',
+                                                    cursor: 'pointer',
+                                                    transition: '300ms',
+                                                    '&:hover': {
+                                                        color: colors.red[500],
+                                                    },
+                                                }}
+                                            >
+                                                <Box>{product.name}</Box>
+                                                <Box sx={{ fontSize: '13px' }}>
+                                                    {Number(product.price).toLocaleString()} VND
+                                                </Box>
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                )}
+                            </Box>
                             <Box
                                 component="button"
                                 sx={{
