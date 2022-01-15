@@ -1,5 +1,5 @@
 import { ClientLayout } from 'src/layouts';
-import { Home, Login } from 'src/pages';
+import { Home, Login, Register } from 'src/pages';
 
 export const routes = [
     {
@@ -10,6 +10,11 @@ export const routes = [
     {
         path: '/login',
         component: Login,
+        layout: null,
+    },
+    {
+        path: '/register',
+        component: Register,
         layout: null,
     },
 ];
