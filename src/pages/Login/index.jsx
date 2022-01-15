@@ -2,22 +2,43 @@ import { Button, colors, Divider, Stack, TextField, Typography } from '@mui/mate
 import { Box } from '@mui/system';
 import { useFormik } from 'formik';
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import authApi from 'src/api/auth';
+import { useQuery } from 'src/hooks';
+import { setUserInfo } from 'src/redux/slices';
 import * as yup from 'yup';
 
 function Login() {
+    const navigate = useNavigate();
+    const current_url = useQuery().get('current_url');
+
     const initialValues = useMemo(
         () => ({
-            email: '',
-            password: '',
+            email: 'admin@gmail.com',
+            password: '123@abc',
         }),
         [],
     );
+    const dispatch = useDispatch();
 
     const formik = useFormik({
         initialValues,
         onSubmit: async (values) => {
-            console.log(values);
+            try {
+                const res = await authApi.login(values);
+                dispatch(setUserInfo({ userInfo: res.user, token: res.token }));
+
+                toast.success('Đăng nhập thành công!');
+                if (current_url) {
+                    navigate(current_url, { replace: true });
+                } else {
+                    navigate('/', { replace: true });
+                }
+            } catch (err) {
+                toast.error('Đăng nhập thất bại!');
+            }
         },
         validationSchema: yup.object().shape({
             email: yup.string().required('Bạn chưa nhập email!').email('Email không hợp lệ!'),
@@ -29,7 +50,6 @@ function Login() {
         <Box
             sx={{
                 minHeight: '100vh',
-                background: colors.grey[300],
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -47,6 +67,7 @@ function Login() {
                     fullWidth
                     label="Email"
                     name="email"
+                    value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.onBlur}
                     size="small"
@@ -58,6 +79,7 @@ function Login() {
                 <TextField
                     fullWidth
                     type="password"
+                    value={formik.values.password}
                     label="Mật khẩu"
                     onChange={formik.handleChange}
                     onBlur={formik.onBlur}

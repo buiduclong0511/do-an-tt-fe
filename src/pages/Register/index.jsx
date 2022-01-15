@@ -54,6 +54,7 @@ function Register() {
                     name="email"
                     onChange={formik.handleChange}
                     onBlur={formik.onBlur}
+                    value={formik.values.email}
                     size="small"
                     placeholder="Nhập email"
                     sx={{ mb: 3 }}
@@ -66,6 +67,7 @@ function Register() {
                     label="Mật khẩu"
                     onChange={formik.handleChange}
                     onBlur={formik.onBlur}
+                    value={formik.values.password}
                     name="password"
                     size="small"
                     placeholder="Nhập mật khẩu"
@@ -78,6 +80,7 @@ function Register() {
                     type="password"
                     label="Xác thực mật khẩu"
                     onChange={formik.handleChange}
+                    value={formik.values.confirmPassword}
                     onBlur={formik.onBlur}
                     name="confirmPassword"
                     size="small"
