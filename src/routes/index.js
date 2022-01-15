@@ -1,5 +1,5 @@
-import { ClientLayout } from 'src/layouts';
-import { Home, Login, Register } from 'src/pages';
+import { AdminLayout, ClientLayout } from 'src/layouts';
+import { Home, ListProduct, Login, NewProduct, Register } from 'src/pages';
 
 export const routes = [
     {
@@ -16,5 +16,15 @@ export const routes = [
         path: '/register',
         component: Register,
         layout: null,
+    },
+    {
+        path: '/admin/new-product',
+        component: NewProduct,
+        layout: AdminLayout,
+    },
+    {
+        path: '/admin/list-products',
+        component: ListProduct,
+        layout: AdminLayout,
     },
 ];

@@ -41,7 +41,51 @@ function Home() {
                     <Grid container spacing={2}>
                         {products.map((product) => (
                             <Grid item xs={3} key={product.id}>
-                                <Box>
+                                <Box sx={{ cursor: 'pointer' }}>
+                                    <Box
+                                        component="img"
+                                        sx={{ width: '100%' }}
+                                        src={`${process.env.REACT_APP_BASE_URL}/${product.image}`}
+                                    />
+                                    <Typography>{product.name}</Typography>
+                                    <Typography
+                                        sx={{
+                                            color: '#fff',
+                                            backgroundColor: '#cd1818',
+                                            display: 'inline-block',
+                                            px: 1,
+                                            borderRadius: '10px',
+                                            mt: 1,
+                                        }}
+                                    >
+                                        {Number(product.price).toLocaleString()} VND
+                                    </Typography>
+                                    <Typography
+                                        fontSize="13px"
+                                        fontWeight={400}
+                                        mt={1}
+                                        component="p"
+                                        color={colors.grey[700]}
+                                    >
+                                        {product.description
+                                            .split('\n')
+                                            .map((item) => `- ${item}`)
+                                            .slice(0, 3)
+                                            .join('\n')}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+                <Box mt={4} p={2} sx={{ background: '#fff', borderRadius: '8px' }}>
+                    <Typography variant="h3" fontSize="25px" mb={3} color="#cd1818">
+                        Sản phẩm mới
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {products.map((product) => (
+                            <Grid item xs={3} key={product.id}>
+                                <Box sx={{ cursor: 'pointer' }}>
                                     <Box
                                         component="img"
                                         sx={{ width: '100%' }}
