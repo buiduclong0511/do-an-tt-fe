@@ -21,13 +21,14 @@ import { productApi } from 'src/api';
 
 function ListProduct() {
     const [products, setProducts] = useState([]);
+    const [inputValue, setInputValue] = useState('');
     const navigate = useNavigate();
 
-    const getProducts = useCallback(() => productApi.getProducts().then((res) => setProducts(res.data)), []);
+    const getProducts = useCallback((q) => productApi.getProducts(q).then((res) => setProducts(res.data)), []);
 
     useEffect(() => {
-        getProducts();
-    }, [getProducts]);
+        getProducts(inputValue.trim());
+    }, [getProducts, inputValue]);
 
     const handleClickDeleteButton = useCallback(
         (id) =>
@@ -76,6 +77,8 @@ function ListProduct() {
                         outline: 'none',
                         border: '1px solid #ccc',
                     }}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value.trim())}
                 />
             </Stack>
             <TableContainer>

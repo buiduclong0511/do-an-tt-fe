@@ -21,14 +21,15 @@ import { toast } from 'react-toastify';
 
 function ListCategories() {
     const [categories, setCategories] = useState([]);
+    const [inputValue, setInputValue] = useState('');
 
     const navigate = useNavigate();
 
-    const getCategories = useCallback(() => categoryApi.getCategories().then((res) => setCategories(res.data)), []);
+    const getCategories = useCallback((q) => categoryApi.getCategories(q).then((res) => setCategories(res.data)), []);
 
     useEffect(() => {
-        getCategories();
-    }, [getCategories]);
+        getCategories(inputValue);
+    }, [getCategories, inputValue]);
 
     const handleClickDeleteButton = useCallback(
         (id) =>
@@ -77,6 +78,8 @@ function ListCategories() {
                         outline: 'none',
                         border: '1px solid #ccc',
                     }}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value.trim())}
                 />
             </Stack>
             <TableContainer>

@@ -2,8 +2,12 @@ import axiosClient from '../axiosClient';
 import { serialize } from 'object-to-formdata';
 
 const categoryApi = {
-    getCategories() {
+    getCategories(q) {
         const url = 'api/categories';
+
+        if (q) {
+            return axiosClient.get(url, { params: { q } });
+        }
 
         return axiosClient.get(url);
     },
