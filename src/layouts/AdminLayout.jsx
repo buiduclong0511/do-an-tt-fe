@@ -46,7 +46,7 @@ function AdminLayout({ children }) {
                         <MenuItem>
                             <Typography
                                 component={Link}
-                                to="/admin/list-products"
+                                to="/admin/list-categories"
                                 sx={{ width: '100%', textDecoration: 'none', color: colors.common.black }}
                             >
                                 Quản lý danh mục

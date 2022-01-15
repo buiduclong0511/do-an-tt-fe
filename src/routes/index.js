@@ -1,5 +1,15 @@
 import { AdminLayout, ClientLayout } from 'src/layouts';
-import { EditProduct, Home, ListProduct, Login, NewProduct, Register } from 'src/pages';
+import {
+    EditCategory,
+    EditProduct,
+    Home,
+    ListCategories,
+    ListProduct,
+    Login,
+    NewCategory,
+    NewProduct,
+    Register,
+} from 'src/pages';
 
 export const routes = [
     {
@@ -30,6 +40,21 @@ export const routes = [
     {
         path: '/admin/edit-product/:id',
         component: EditProduct,
+        layout: AdminLayout,
+    },
+    {
+        path: '/admin/list-categories',
+        component: ListCategories,
+        layout: AdminLayout,
+    },
+    {
+        path: '/admin/new-category',
+        component: NewCategory,
+        layout: AdminLayout,
+    },
+    {
+        path: '/admin/edit-category/:id',
+        component: EditCategory,
         layout: AdminLayout,
     },
 ];
