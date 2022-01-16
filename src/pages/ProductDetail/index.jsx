@@ -2,13 +2,14 @@ import { Button, colors, Container, Divider, Grid, Stack, Typography } from '@mu
 import { Box } from '@mui/system';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { cartApi, productApi } from 'src/api';
+import { cartApi, orderApi, productApi } from 'src/api';
 import { pathFile } from 'src/utils';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { setCart } from 'src/redux/slices';
+import { setCart, setOrder } from 'src/redux/slices';
+import { toast } from 'react-toastify';
 
 function ProductDetail() {
     const { id } = useParams();
@@ -18,6 +19,7 @@ function ProductDetail() {
     const dispatch = useDispatch();
     const [product, setProduct] = useState(null);
     const [otherProducts, setOtherProducts] = useState([]);
+    const [number, setNumber] = useState(0);
 
     const isExistedInCart = useMemo(
         () => !!cart && cart.products.some((_product) => _product.id === product?.id),
@@ -36,6 +38,21 @@ function ProductDetail() {
             }),
         [dispatch, id],
     );
+
+    const handleOrder = useCallback(() => {
+        orderApi
+            .createOrder({
+                user_id: userInfo?.id,
+                product_id: Number(id),
+                number,
+                price: (number * Number(product?.price)).toString(),
+            })
+            .then((res) => {
+                toast.success('Đặt hàng thành công!');
+                dispatch(setOrder(res.data));
+                navigate('/order');
+            });
+    }, [dispatch, id, navigate, number, product?.price, userInfo?.id]);
 
     if (!product) {
         return null;
@@ -84,6 +101,16 @@ function ProductDetail() {
                                 </Box>
                             </Stack>
                             <Divider sx={{ my: 2 }} />
+                            <Stack direction="row" alignItems="center">
+                                <Typography mr={2}>Số lượng: </Typography>
+                                <Box
+                                    component="input"
+                                    value={number}
+                                    onChange={(e) => setNumber(e.target.value ? Number(e.target.value) : 0)}
+                                    type="number"
+                                />
+                            </Stack>
+                            <Divider sx={{ my: 2 }} />
                             <Stack direction="row" spacing={2}>
                                 {userInfo ? (
                                     <Button
@@ -103,7 +130,17 @@ function ProductDetail() {
                                         Thêm vào giỏ hàng
                                     </Button>
                                 )}
-                                <Button variant="contained" color="error" endIcon={<AttachMoneyIcon />}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    endIcon={<AttachMoneyIcon />}
+                                    disabled={!number}
+                                    onClick={
+                                        userInfo
+                                            ? handleOrder
+                                            : () => navigate(`/login?path=${window.location.pathname}`)
+                                    }
+                                >
                                     Đặt mua
                                 </Button>
                             </Stack>
