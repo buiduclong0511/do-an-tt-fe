@@ -11,6 +11,11 @@ const orderApi = {
 
         return axiosClient.get(url);
     },
+    cancelOrder(id) {
+        const url = 'api/orders/' + id;
+
+        return axiosClient.delete(url);
+    },
 };
 
 export default orderApi;

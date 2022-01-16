@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Container,
     Table,
     TableBody,
@@ -9,7 +10,11 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import { useDispatch, useSelector } from 'react-redux';
+import { orderApi } from 'src/api';
+import { setOrder } from 'src/redux/slices';
 
 const cellStyle = {
     color: '#fff',
@@ -17,6 +22,26 @@ const cellStyle = {
 
 function Order() {
     const orders = useSelector((state) => state.order).orders;
+    const dispatch = useDispatch();
+
+    const handleCancelOrder = useCallback(
+        (id) => {
+            confirmAlert({
+                title: 'Xác nhận xóa',
+                message: 'Bạn có muốn hủy đơn hàng này ?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () => orderApi.cancelOrder(id).then((res) => dispatch(setOrder(res.data))),
+                    },
+                    {
+                        label: 'No',
+                    },
+                ],
+            });
+        },
+        [dispatch],
+    );
 
     return (
         <Box pt={3} pb={6}>
@@ -31,6 +56,7 @@ function Order() {
                                     <TableCell sx={cellStyle}>Số lượng</TableCell>
                                     <TableCell sx={cellStyle}>Giá</TableCell>
                                     <TableCell sx={cellStyle}>Trạng thái</TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -58,6 +84,15 @@ function Order() {
                                                 {Number(order.price).toLocaleString()} VND
                                             </TableCell>
                                             <TableCell sx={cellStyle}>{status}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    disabled={!!order.status}
+                                                    variant="contained"
+                                                    onClick={() => handleCancelOrder(order.id)}
+                                                >
+                                                    Hủy đơn hàng
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
