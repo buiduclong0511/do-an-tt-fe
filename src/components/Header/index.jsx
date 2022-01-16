@@ -9,6 +9,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { cartApi, categoryApi, orderApi, productApi } from 'src/api';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 function Header() {
     const navigate = useNavigate();
@@ -125,6 +126,11 @@ function Header() {
                     <Box>
                         {userInfo ? (
                             <Stack direction="row" alignItems="center">
+                                {userInfo.role === 1 && (
+                                    <IconButton sx={{ color: '#fff' }} onClick={() => navigate(`/admin/list-products`)}>
+                                        <AdminPanelSettingsIcon />
+                                    </IconButton>
+                                )}
                                 <Badge
                                     badgeContent={orders.length}
                                     color="primary"

@@ -25,6 +25,13 @@ function AdminLayout({ children }) {
         }
     }, [navigate, userInfo]);
 
+    useEffect(() => {
+        if (!userInfo || userInfo?.role !== 1) {
+            handleLogout();
+            navigate(`/login`, { replace: true });
+        }
+    }, [handleLogout, navigate, userInfo]);
+
     return (
         <Stack direction="column" minHeight="100vh">
             <Stack direction="row" sx={{ background: colors.blue[500], color: '#fff', height: '50px' }}>
