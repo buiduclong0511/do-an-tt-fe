@@ -3,6 +3,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 import React, { useEffect } from 'react';
 import { productApi } from 'src/api';
+import { Link } from 'react-router-dom';
 
 function Home() {
     const [products, setProducts] = React.useState([]);
@@ -13,7 +14,7 @@ function Home() {
     }, []);
 
     return (
-        <Box sx={{ backgroundImage: 'url(images/background_banner.png)', flex: 1, backgroundSize: 'cover' }}>
+        <Box sx={{ backgroundImage: 'url(images/background_banner.png)', flex: 1, backgroundSize: 'cover', pb: 6 }}>
             <Container maxWidth="lg">
                 <Stack direction="row" justifyContent="center" sx={{ pt: 4 }}>
                     <img src="images/background_banner_2.png" alt="" />
@@ -41,7 +42,11 @@ function Home() {
                     <Grid container spacing={2}>
                         {products.map((product) => (
                             <Grid item xs={3} key={product.id}>
-                                <Box sx={{ cursor: 'pointer' }}>
+                                <Box
+                                    component={Link}
+                                    to={`/product/${product.id}`}
+                                    sx={{ cursor: 'pointer', textDecoration: 'none', color: '#000' }}
+                                >
                                     <Box
                                         component="img"
                                         sx={{ width: '100%', height: '150px' }}
@@ -88,7 +93,11 @@ function Home() {
                     <Grid container spacing={2}>
                         {products.map((product) => (
                             <Grid item xs={3} key={product.id}>
-                                <Box sx={{ cursor: 'pointer' }}>
+                                <Box
+                                    component={Link}
+                                    to={`/product/${product.id}`}
+                                    sx={{ cursor: 'pointer', textDecoration: 'none', color: '#000' }}
+                                >
                                     <Box
                                         component="img"
                                         sx={{ width: '100%', height: '150px' }}

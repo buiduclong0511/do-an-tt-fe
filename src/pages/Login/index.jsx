@@ -12,7 +12,7 @@ import * as yup from 'yup';
 
 function Login() {
     const navigate = useNavigate();
-    const current_url = useQuery().get('current_url');
+    const currentPath = useQuery().get('path');
 
     const initialValues = useMemo(
         () => ({
@@ -31,8 +31,8 @@ function Login() {
                 dispatch(setUserInfo({ userInfo: res.user, token: res.token }));
 
                 toast.success('Đăng nhập thành công!');
-                if (current_url) {
-                    navigate(current_url, { replace: true });
+                if (currentPath) {
+                    navigate(currentPath, { replace: true });
                 } else {
                     navigate('/', { replace: true });
                 }

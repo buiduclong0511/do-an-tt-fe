@@ -1,5 +1,6 @@
 import { AdminLayout, ClientLayout } from 'src/layouts';
 import {
+    Cart,
     EditCategory,
     EditProduct,
     Home,
@@ -8,6 +9,7 @@ import {
     Login,
     NewCategory,
     NewProduct,
+    ProductDetail,
     Register,
 } from 'src/pages';
 
@@ -26,6 +28,16 @@ export const routes = [
         path: '/register',
         component: Register,
         layout: null,
+    },
+    {
+        path: '/product/:id',
+        component: ProductDetail,
+        layout: ClientLayout,
+    },
+    {
+        path: '/cart',
+        component: Cart,
+        layout: ClientLayout,
     },
     {
         path: '/admin/new-product',

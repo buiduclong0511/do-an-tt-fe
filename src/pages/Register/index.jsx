@@ -2,12 +2,19 @@ import { Button, colors, Divider, Stack, TextField, Typography } from '@mui/mate
 import { Box } from '@mui/system';
 import { useFormik } from 'formik';
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { authApi } from 'src/api';
+import { setUserInfo } from 'src/redux/slices';
 import * as yup from 'yup';
 
 function Register() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const initialValues = useMemo(
         () => ({
+            name: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -18,9 +25,22 @@ function Register() {
     const formik = useFormik({
         initialValues,
         onSubmit: async (values) => {
-            console.log(values);
+            try {
+                const res = await authApi.register({
+                    name: values.name,
+                    email: values.email,
+                    password: values.password,
+                });
+                console.log('~ res', res);
+                toast.success('Đăng ký thành công!');
+                dispatch(setUserInfo({ token: res.token, userInfo: res.user }));
+                navigate('/', { replace: true });
+            } catch (err) {
+                toast.error('Có lỗi xảy ra!');
+            }
         },
         validationSchema: yup.object().shape({
+            name: yup.string().required('Bạn chưa nhập tên!'),
             email: yup.string().required('Bạn chưa nhập email!').email('Email không hợp lệ!'),
             password: yup.string().required('Bạn chưa nhập mật khẩu!'),
             confirmPassword: yup
@@ -34,7 +54,6 @@ function Register() {
         <Box
             sx={{
                 minHeight: '100vh',
-                background: colors.grey[300],
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -48,6 +67,19 @@ function Register() {
                 <Typography mb={2} variant="h1" fontSize="25px" fontWeight={400}>
                     Đăng ký
                 </Typography>
+                <TextField
+                    fullWidth
+                    label="Tên người dùng"
+                    name="name"
+                    onChange={formik.handleChange}
+                    onBlur={formik.onBlur}
+                    value={formik.values.name}
+                    size="small"
+                    placeholder="Nhập tên người dùng"
+                    sx={{ mb: 3 }}
+                    error={formik.touched.name && !!formik.errors.name}
+                    helperText={formik.touched.name && !!formik.errors.name ? formik.errors.name : ''}
+                />
                 <TextField
                     fullWidth
                     label="Email"

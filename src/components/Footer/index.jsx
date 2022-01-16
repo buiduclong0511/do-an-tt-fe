@@ -28,7 +28,7 @@ function Footer() {
     );
 
     return (
-        <Box mt={8} sx={{ backgroundColor: '#fff' }}>
+        <Box sx={{ backgroundColor: '#fff', borderTop: '1px solid #ccc' }}>
             <Container maxWidth="lg">
                 <Stack direction="row" py={3}>
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

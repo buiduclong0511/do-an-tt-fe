@@ -1,7 +1,7 @@
 import { Badge, Box, Button, colors, Container, IconButton, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import authApi from 'src/api/auth';
 import { clearUserInfo, setCart } from 'src/redux/slices';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
@@ -10,6 +10,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { cartApi, categoryApi, productApi } from 'src/api';
 
 function Header() {
+    const navigate = useNavigate();
     const userInfo = useSelector((state) => state.auth).userInfo;
     const cart = useSelector((state) => state.cart).cart;
     const dispatch = useDispatch();
@@ -81,6 +82,7 @@ function Header() {
                                     >
                                         {products.map((product) => (
                                             <Box
+                                                onClick={() => navigate(`/product/${product.id}`)}
                                                 key={product.id}
                                                 sx={{
                                                     p: 1,
@@ -123,6 +125,7 @@ function Header() {
                                     badgeContent={cart?.products ? cart.products.length : 0}
                                     color="primary"
                                     sx={{ mr: 2, cursor: 'pointer' }}
+                                    onClick={() => navigate('/cart')}
                                 >
                                     <ShoppingCartIcon />
                                 </Badge>
