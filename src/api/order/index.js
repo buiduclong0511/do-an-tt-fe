@@ -21,6 +21,11 @@ const orderApi = {
 
         return axiosClient.get(url, { params: { q } });
     },
+    changeStatus(id, body) {
+        const url = `/api/orders/${id}/change-status`;
+
+        return axiosClient.post(url, body);
+    },
 };
 
 export default orderApi;
