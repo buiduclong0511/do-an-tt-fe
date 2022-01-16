@@ -1,16 +1,17 @@
 import { Box, colors, Container, Grid, Stack, Typography } from '@mui/material';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
 import React, { useEffect } from 'react';
-import { productApi } from 'src/api';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Link } from 'react-router-dom';
+import { productApi } from 'src/api';
 
 function Home() {
-    const [products, setProducts] = React.useState([]);
-    console.log('~ products', products);
+    const [hotProducts, setHotProducts] = React.useState([]);
+    const [newProducts, setNewHotProducts] = React.useState([]);
 
     useEffect(() => {
-        productApi.getProducts().then((res) => setProducts(res.data.slice(0, 4)));
+        productApi.getProducts('', 'orders_count').then((res) => setHotProducts(res.data.slice(0, 4)));
+        productApi.getProducts('', 'created_at').then((res) => setNewHotProducts(res.data.slice(0, 4)));
     }, []);
 
     return (
@@ -40,7 +41,7 @@ function Home() {
                         Sản phẩm nổi bật
                     </Typography>
                     <Grid container spacing={2}>
-                        {products.map((product) => (
+                        {hotProducts.map((product) => (
                             <Grid item xs={3} key={product.id}>
                                 <Box
                                     component={Link}
@@ -53,6 +54,11 @@ function Home() {
                                         src={`${process.env.REACT_APP_BASE_URL}/${product.image}`}
                                     />
                                     <Typography>{product.name}</Typography>
+                                    {!!product.orders_count && (
+                                        <Typography fontSize="13px" color="#333">
+                                            {product.orders_count} lượt mua
+                                        </Typography>
+                                    )}
                                     <Typography
                                         sx={{
                                             color: '#fff',
@@ -91,7 +97,7 @@ function Home() {
                         Sản phẩm mới
                     </Typography>
                     <Grid container spacing={2}>
-                        {products.map((product) => (
+                        {newProducts.map((product) => (
                             <Grid item xs={3} key={product.id}>
                                 <Box
                                     component={Link}

@@ -2,14 +2,22 @@ import axiosClient from '../axiosClient';
 import { serialize } from 'object-to-formdata';
 
 const productApi = {
-    getProducts(q = '') {
+    getProducts(q = '', orderBy = '', sortDir = '') {
         const url = 'api/products';
 
+        const params = {};
+
         if (q) {
-            return axiosClient.get(url, { params: { q } });
+            params.q = q;
+        }
+        if (orderBy) {
+            params.orderBy = orderBy;
+        }
+        if (sortDir) {
+            params.sortDir = sortDir;
         }
 
-        return axiosClient.get(url);
+        return axiosClient.get(url, { params });
     },
     createProduct(body) {
         const url = 'api/products';
