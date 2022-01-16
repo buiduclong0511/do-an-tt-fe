@@ -61,6 +61,15 @@ function AdminLayout({ children }) {
                                 Quản lý sản phẩm
                             </Typography>
                         </MenuItem>
+                        <MenuItem>
+                            <Typography
+                                component={Link}
+                                to="/admin/list-orders"
+                                sx={{ width: '100%', textDecoration: 'none', color: colors.common.black }}
+                            >
+                                Quản lý đơn hàng
+                            </Typography>
+                        </MenuItem>
                     </MenuList>
                 </Box>
                 <Box sx={{ flex: 1 }}>{children}</Box>

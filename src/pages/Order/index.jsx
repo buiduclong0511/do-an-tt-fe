@@ -70,7 +70,7 @@ function Order() {
                                             status = 'Đang giao hàng';
                                             break;
                                         case 2:
-                                            status = 'Đã nhân hàng';
+                                            status = 'Đã nhận hàng';
                                             break;
                                         default:
                                     }

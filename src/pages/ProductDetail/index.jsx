@@ -1,4 +1,4 @@
-import { Button, colors, Container, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Button, colors, Container, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setCart, setOrder } from 'src/redux/slices';
 import { toast } from 'react-toastify';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 function ProductDetail() {
     const { id } = useParams();
@@ -19,7 +21,7 @@ function ProductDetail() {
     const dispatch = useDispatch();
     const [product, setProduct] = useState(null);
     const [otherProducts, setOtherProducts] = useState([]);
-    const [number, setNumber] = useState(0);
+    const [isShowFormOrder, setIsShowFormOrder] = useState(false);
 
     const isExistedInCart = useMemo(
         () => !!cart && cart.products.some((_product) => _product.id === product?.id),
@@ -39,20 +41,46 @@ function ProductDetail() {
         [dispatch, id],
     );
 
-    const handleOrder = useCallback(() => {
-        orderApi
-            .createOrder({
-                user_id: userInfo?.id,
-                product_id: Number(id),
-                number,
-                price: (number * Number(product?.price)).toString(),
-            })
-            .then((res) => {
-                toast.success('Đặt hàng thành công!');
+    const formik = useFormik({
+        initialValues: {
+            receiver: userInfo?.name || '',
+            phone: '',
+            address: '',
+            number: 1,
+        },
+        onSubmit: async (values) => {
+            try {
+                const res = await orderApi.createOrder({
+                    ...values,
+                    price: (values.number * product?.price).toString(),
+                    product_id: product?.id,
+                });
                 dispatch(setOrder(res.data));
                 navigate('/order');
-            });
-    }, [dispatch, id, navigate, number, product?.price, userInfo?.id]);
+                toast.success('Đặt hàng thành công!');
+            } catch (err) {
+                toast.error('Có lỗi xảy ra!');
+            }
+        },
+        validationSchema: yup.object().shape({
+            receiver: yup.string().required('Trường này không được để trống!'),
+            phone: yup
+                .string()
+                .required('Trường này không được để trống!')
+                .matches(/^0[0-9]{9}$/, 'Số điện thoại không hợp lệ!'),
+            address: yup.string().required('Trường này không được để trống!'),
+            number: yup
+                .number()
+                .required('Trường này không được để trống!')
+                .test({
+                    name: 'sdfsd',
+                    message: 'Số lượng phải lớn hơn 1!',
+                    test: (value) => !!Number(value),
+                }),
+        }),
+    });
+
+    const handleShowForm = useCallback(() => setIsShowFormOrder(true), []);
 
     if (!product) {
         return null;
@@ -101,16 +129,6 @@ function ProductDetail() {
                                 </Box>
                             </Stack>
                             <Divider sx={{ my: 2 }} />
-                            <Stack direction="row" alignItems="center">
-                                <Typography mr={2}>Số lượng: </Typography>
-                                <Box
-                                    component="input"
-                                    value={number}
-                                    onChange={(e) => setNumber(e.target.value ? Number(e.target.value) : 0)}
-                                    type="number"
-                                />
-                            </Stack>
-                            <Divider sx={{ my: 2 }} />
                             <Stack direction="row" spacing={2}>
                                 {userInfo ? (
                                     <Button
@@ -134,10 +152,9 @@ function ProductDetail() {
                                     variant="contained"
                                     color="error"
                                     endIcon={<AttachMoneyIcon />}
-                                    disabled={!number}
                                     onClick={
                                         userInfo
-                                            ? handleOrder
+                                            ? handleShowForm
                                             : () => navigate(`/login?path=${window.location.pathname}`)
                                     }
                                 >
@@ -147,6 +164,82 @@ function ProductDetail() {
                         </Box>
                     </Box>
                 </Stack>
+                {isShowFormOrder && (
+                    <Stack direction="row" justifyContent="center" mt={4}>
+                        <Box width="500px">
+                            <Typography fontSize="25px" mb={2}>
+                                Nhập thông tin đơn hàng
+                            </Typography>
+                            <TextField
+                                label="Tên người nhận"
+                                required
+                                value={formik.values.receiver}
+                                placeholder="Nhập tên người nhân..."
+                                name="receiver"
+                                helperText={
+                                    !!formik.errors.receiver && formik.touched.receiver ? formik.errors.receiver : ''
+                                }
+                                error={!!formik.errors.receiver && formik.touched.receiver}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                size="small"
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Số điện thoại"
+                                required
+                                value={formik.values.phone}
+                                placeholder="Nhập số điện thoại..."
+                                name="phone"
+                                helperText={!!formik.errors.phone && formik.touched.phone ? formik.errors.phone : ''}
+                                error={!!formik.errors.phone && formik.touched.phone}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                size="small"
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Nhập địa chỉ"
+                                required
+                                value={formik.values.address}
+                                placeholder="Nhập địa chỉ..."
+                                name="address"
+                                helperText={
+                                    !!formik.errors.address && formik.touched.address ? formik.errors.address : ''
+                                }
+                                error={!!formik.errors.address && formik.touched.address}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                size="small"
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Số lượng"
+                                required
+                                type="number"
+                                value={formik.values.number}
+                                placeholder="Nhập số lượng..."
+                                name="number"
+                                helperText={!!formik.errors.number && formik.touched.number ? formik.errors.number : ''}
+                                error={!!formik.errors.number && formik.touched.number}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                size="small"
+                                sx={{ mb: 2 }}
+                            />
+                            <Button sx={{ mr: 2 }} onClick={formik.handleSubmit} variant="contained">
+                                Đặt hàng
+                            </Button>
+                            <Button variant="contained" color="error">
+                                Hủy
+                            </Button>
+                        </Box>
+                    </Stack>
+                )}
                 <Divider sx={{ my: 4 }} />
                 <Box>
                     <Typography mb={2} fontSize="20px">
