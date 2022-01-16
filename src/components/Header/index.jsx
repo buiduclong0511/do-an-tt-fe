@@ -1,18 +1,21 @@
 import { Badge, Box, Button, colors, Container, IconButton, Stack, Typography } from '@mui/material';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import authApi from 'src/api/auth';
-import { clearUserInfo, setCart } from 'src/redux/slices';
+import { clearUserInfo, setCart, setOrder } from 'src/redux/slices';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { cartApi, categoryApi, productApi } from 'src/api';
+import { cartApi, categoryApi, orderApi, productApi } from 'src/api';
 
 function Header() {
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state.auth).userInfo;
     const cart = useSelector((state) => state.cart).cart;
+    const orders = useSelector((state) => state.order).orders;
+    console.log('~ orders', orders);
     const dispatch = useDispatch();
 
     const [categories, setCategories] = useState([]);
@@ -22,6 +25,7 @@ function Header() {
     useEffect(() => {
         if (userInfo) {
             cartApi.getUserCart().then((res) => dispatch(setCart(res.data)));
+            orderApi.getOrders().then((res) => dispatch(setOrder(res.data || [])));
         }
     }, [dispatch, userInfo]);
 
@@ -121,6 +125,14 @@ function Header() {
                     <Box>
                         {userInfo ? (
                             <Stack direction="row" alignItems="center">
+                                <Badge
+                                    badgeContent={orders.length}
+                                    color="primary"
+                                    sx={{ mr: 2, cursor: 'pointer' }}
+                                    onClick={() => navigate('/cart')}
+                                >
+                                    <LocalShippingIcon />
+                                </Badge>
                                 <Badge
                                     badgeContent={cart?.products ? cart.products.length : 0}
                                     color="primary"

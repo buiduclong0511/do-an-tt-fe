@@ -12,6 +12,7 @@ import {
 import { Box } from '@mui/system';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { cartApi } from 'src/api';
 import { setCart } from 'src/redux/slices';
 
@@ -53,8 +54,13 @@ function Cart() {
                                             {Number(product.price).toLocaleString()} VND
                                         </TableCell>
                                         <TableCell>
-                                            <Button variant="contained" sx={{ mr: 2 }}>
-                                                Đặt mua
+                                            <Button
+                                                variant="contained"
+                                                component={Link}
+                                                to={`/product/${product.id}`}
+                                                sx={{ mr: 2 }}
+                                            >
+                                                Chi tiết mặt hàng
                                             </Button>
                                             <Button
                                                 variant="contained"
