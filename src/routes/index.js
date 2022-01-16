@@ -46,6 +46,11 @@ export const routes = [
         layout: ClientLayout,
     },
     {
+        path: '/list-products',
+        component: ListProduct,
+        layout: ClientLayout,
+    },
+    {
         path: '/admin/new-product',
         component: NewProduct,
         layout: AdminLayout,

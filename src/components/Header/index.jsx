@@ -116,6 +116,7 @@ function Header() {
                                     width: '31px',
                                     cursor: 'pointer',
                                 }}
+                                onClick={() => navigate(`/list-products?q=${inputValue.trim()}`)}
                             >
                                 <SearchIcon />
                             </Box>
@@ -159,7 +160,13 @@ function Header() {
                 <Container maxWidth="lg">
                     <Stack direction="row">
                         {categories.map((category) => (
-                            <Box key={category.id} mr={4} sx={{ cursor: 'pointer' }}>
+                            <Box
+                                component={Link}
+                                to={`/list-products?category_id=${category.id}`}
+                                key={category.id}
+                                mr={4}
+                                sx={{ cursor: 'pointer', color: '#fff', textDecoration: 'none' }}
+                            >
                                 {category.name}
                             </Box>
                         ))}

@@ -31,6 +31,11 @@ const categoryApi = {
 
         return axiosClient.post(url, serialize(body), { params: { _method: 'PATCH' } });
     },
+    getProductsCategory(id) {
+        const url = `api/categories/${id}/products`;
+
+        return axiosClient.get(url);
+    },
 };
 
 export default categoryApi;
