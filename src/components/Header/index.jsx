@@ -15,7 +15,6 @@ function Header() {
     const userInfo = useSelector((state) => state.auth).userInfo;
     const cart = useSelector((state) => state.cart).cart;
     const orders = useSelector((state) => state.order).orders;
-    console.log('~ orders', orders);
     const dispatch = useDispatch();
 
     const [categories, setCategories] = useState([]);
@@ -129,7 +128,7 @@ function Header() {
                                     badgeContent={orders.length}
                                     color="primary"
                                     sx={{ mr: 2, cursor: 'pointer' }}
-                                    onClick={() => navigate('/cart')}
+                                    onClick={() => navigate('/order')}
                                 >
                                     <LocalShippingIcon />
                                 </Badge>

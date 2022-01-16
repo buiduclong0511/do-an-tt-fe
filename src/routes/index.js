@@ -9,6 +9,7 @@ import {
     Login,
     NewCategory,
     NewProduct,
+    Order,
     ProductDetail,
     Register,
 } from 'src/pages';
@@ -37,6 +38,11 @@ export const routes = [
     {
         path: '/cart',
         component: Cart,
+        layout: ClientLayout,
+    },
+    {
+        path: '/order',
+        component: Order,
         layout: ClientLayout,
     },
     {
