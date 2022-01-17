@@ -1,5 +1,6 @@
 import { AdminLayout, ClientLayout } from 'src/layouts';
 import {
+    AdminListProduct,
     AdminOrder,
     Cart,
     EditCategory,
@@ -58,7 +59,7 @@ export const routes = [
     },
     {
         path: '/admin/list-products',
-        component: ListProduct,
+        component: AdminListProduct,
         layout: AdminLayout,
     },
     {
