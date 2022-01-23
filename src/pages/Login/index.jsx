@@ -16,8 +16,8 @@ function Login() {
 
     const initialValues = useMemo(
         () => ({
-            email: 'admin@gmail.com',
-            password: '123@abc',
+            email: '',
+            password: '',
         }),
         [],
     );
