@@ -15,9 +15,10 @@ function AdminLayout({ children }) {
 
     const handleLogout = useCallback(() => {
         authApi.logout().then(() => {
+            navigate(`/login`, { replace: true });
             dispatch(clearUserInfo());
         });
-    }, [dispatch]);
+    }, [dispatch, navigate]);
 
     useEffect(() => {
         if (!userInfo || userInfo?.role === 0) {

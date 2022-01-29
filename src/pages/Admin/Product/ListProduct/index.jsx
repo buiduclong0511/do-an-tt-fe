@@ -18,6 +18,8 @@ import { confirmAlert } from 'react-confirm-alert';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { productApi } from 'src/api';
+import { pathFile } from 'src/utils';
+import styles from './ListProduct.module.scss';
 
 function ListProduct() {
     const [products, setProducts] = useState([]);
@@ -91,6 +93,11 @@ function ListProduct() {
                             <TableCell align="left">
                                 <Typography fontWeight={600}>Tên sản phẩm</Typography>
                             </TableCell>
+                            <TableCell>
+                                <Typography pl={4} fontWeight={600}>
+                                    Ảnh
+                                </Typography>
+                            </TableCell>
                             <TableCell align="center">
                                 <Typography fontWeight={600}>Thao tác</Typography>
                             </TableCell>
@@ -101,6 +108,9 @@ function ListProduct() {
                             <TableRow key={product.id}>
                                 <TableCell>{product.id}</TableCell>
                                 <TableCell>{product.name}</TableCell>
+                                <TableCell>
+                                    <img className={styles.image} src={pathFile(product.image)} alt="" />{' '}
+                                </TableCell>
                                 <TableCell align="center">
                                     <Stack spacing={1} direction="row" justifyContent="center">
                                         <Button variant="contained" onClick={() => handleClickEditButton(product.id)}>
