@@ -80,6 +80,15 @@ function AdminLayout({ children }) {
                                 Quản lý đơn hàng
                             </Typography>
                         </MenuItem>
+                        <MenuItem>
+                            <Typography
+                                component={Link}
+                                to="/admin/list-accounts"
+                                sx={{ width: '100%', textDecoration: 'none', color: colors.common.black }}
+                            >
+                                Quản lý tài khoản
+                            </Typography>
+                        </MenuItem>
                     </MenuList>
                 </Box>
                 <Box sx={{ flex: 1 }}>{children}</Box>

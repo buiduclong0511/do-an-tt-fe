@@ -4,3 +4,4 @@ export { default as cartApi } from './cart';
 export { default as categoryApi } from './category';
 export { default as productApi } from './product';
 export { default as orderApi } from './order';
+export { default as accountApi } from './account';

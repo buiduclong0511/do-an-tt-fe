@@ -14,6 +14,7 @@ import {
     Order,
     ProductDetail,
     Register,
+    ListAccounts,
 } from 'src/pages';
 
 export const routes = [
@@ -85,6 +86,11 @@ export const routes = [
     {
         path: '/admin/edit-category/:id',
         component: EditCategory,
+        layout: AdminLayout,
+    },
+    {
+        path: '/admin/list-accounts',
+        component: ListAccounts,
         layout: AdminLayout,
     },
 ];
