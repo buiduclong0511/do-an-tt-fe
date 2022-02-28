@@ -214,6 +214,7 @@ function NewProduct({ editMode = false }) {
                     fullWidth
                     value={formik.values.price}
                     name="price"
+                    type="number"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.price && !!formik.errors.price}
